@@ -1,0 +1,10 @@
+---
+# tasks file for apigee-opdk-setup-postgres-failover
+- name: Ensure that pgmaster is stopped
+  import_role:
+    name: apigee-opdk-setup-stop-component
+  vars:
+    component_name: apigee-postgresql
+
+- name: Promote standby to master
+  shell: "{{ apigee_service }} apigee-postgresql promote-standby-to-master {{ pgmaster_ip }}"
