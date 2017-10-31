@@ -8,3 +8,4 @@
 
 - name: Promote standby to master
   shell: "{{ apigee_service }} apigee-postgresql promote-standby-to-master {{ pgmaster_ip }}"
+
