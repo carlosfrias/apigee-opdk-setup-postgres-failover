@@ -2,15 +2,10 @@
 
 > **An Ansible role that performs a controlled Apigee Postgres master failover** — stop the old master, then `promote-standby-to-master` — so the standby becomes the new writable master with replication lineage preserved. The atomic failover primitive of the Apigee analytics datastore.
 
+> [!NOTE]
+> Engineering portfolio note — this project demonstrates Postgres HA controlled switchover with replication lineage preservation. See the [skills assessment →](SKILLS-ASSESSMENT.md) for the expertise applied.
+
 A Postgres HA switchover procedure expressed as code: knowing **why you stop the old master first**, **why `promote-standby-to-master` takes the prior-master IP as an argument**, and **how this differs from a crash failover**.
-
----
-
-## Why this role is notable
-
-- **Controlled, not crash.** The old master is stopped (not killed) so the standby's WAL stream is current before promotion — a reversible switchover, not a one-way failover.
-- **Replication lineage preserved.** `promote-standby-to-master <old_master_ip>` passes the prior-master IP so the new master can be re-paired as a standby later.
-- **Atomic-primitive composition.** Does one thing (failover) and is composed by the maintenance playbooks that handle the surrounding analytics datastore re-registration.
 
 ---
 
@@ -20,18 +15,6 @@ A Postgres HA switchover procedure expressed as code: knowing **why you stop the
 
 1. **Stop the current master** — `import_role: apigee-opdk-setup-stop-component` with `component_name: apigee-postgresql`. A controlled stop, not a kill, so the standby is caught up on WAL streaming before promotion.
 2. **Promote the standby** — `apigee-service apigee-postgresql promote-standby-to-master {{ pgmaster_ip }}`. Apigee's wrapper around `pg_promote()` that turns the standby into a new writable master and is given the **prior-master IP** so the promoted node knows its replication lineage (enabling a later reverse-standby setup).
-
----
-
-## Capabilities — what this credentials
-
-> Ansible is the medium. The engineering below is the evidence of the expertise applied.
-
-- **Postgres HA switchover** — controlled (not crash) failover: stop the old master first so the standby's WAL stream is current, then promote.
-- **Replication lineage awareness** — `promote-standby-to-master <old_master_ip>` passes the prior-master IP so the new master can be re-paired as a standby later — a reversible switchover.
-- **Atomic-primitive composition** — the role does one thing (failover) and is composed by the maintenance playbooks that handle the surrounding analytics datastore re-registration.
-
----
 
 ---
 
