@@ -1,5 +1,8 @@
 # apigee-opdk-setup-postgres-failover — Apigee Postgres Master Failover (Controlled Switchover)
 
+> 🔄 **Evolution note:** The automation approach from this OPDK-era role has been consolidated into the `apigee-hybrid-workspace` Ansible collection. See the successor capability in the portfolio hub: [`carlosfrias/apigee-hybrid-workspace`](https://github.com/carlosfrias/apigee-hybrid-workspace) → `bap_coe/private_cloud/` and `bap_coe/apigee_hybrid/`. The collection README explains each role group’s business value and production context.
+
+
 > **An Ansible role that performs a controlled Apigee Postgres master failover** — stop the old master, then `promote-standby-to-master` — so the standby becomes the new writable master with replication lineage preserved. The atomic failover primitive of the Apigee analytics datastore.
 
 > [!NOTE]
